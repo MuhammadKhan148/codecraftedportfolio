@@ -4,7 +4,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Upload, Star, Eye } from "lucide-react"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, Suspense } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 
@@ -167,7 +167,7 @@ const allProjects: Project[] = [
   }
 ]
 
-export default function ProjectsPage() {
+function ProjectsContent() {
   const searchParams = useSearchParams()
   const category = searchParams.get('category')
   
@@ -604,5 +604,27 @@ export default function ProjectsPage() {
 
       <Footer />
     </main>
+  )
+}
+
+export default function ProjectsPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-background">
+        <Header />
+        <section className="py-16 sm:py-24 bg-card/30">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+                Loading Projects...
+              </h1>
+            </div>
+          </div>
+        </section>
+        <Footer />
+      </main>
+    }>
+      <ProjectsContent />
+    </Suspense>
   )
 }
