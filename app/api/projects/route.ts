@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server"
-export const dynamic = "force-static"
-export const revalidate = 0
 import path from "path"
 import { readJsonFile, writeJsonFile } from "@/lib/server/json"
 

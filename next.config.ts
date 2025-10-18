@@ -10,12 +10,9 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // Disable TypeScript errors during builds for now
+    // Keep type safety in CI builds
     ignoreBuildErrors: false,
   },
-  output: 'export',
-  trailingSlash: true,
-  distDir: 'dist',
 };
 
 export default nextConfig;
