@@ -1,4 +1,5 @@
 [build]
+  base = "my-app/my-app"
   command = "npm run netlify"
   publish = ".next"
 
