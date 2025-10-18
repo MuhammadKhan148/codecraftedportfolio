@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
     // Disable TypeScript errors during builds for now
     ignoreBuildErrors: false,
   },
+  output: 'export',
+  trailingSlash: true,
+  distDir: 'dist',
 };
 
 export default nextConfig;

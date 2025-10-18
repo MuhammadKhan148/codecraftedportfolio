@@ -198,28 +198,22 @@ function ProjectsContent() {
 
   // Fetch from API on mount (fallback)
   useEffect(() => {
-    ;(async () => {
-      try {
-        const res = await fetch("/api/projects", { cache: "no-store" })
-        if (res.ok) {
-          const data = (await res.json()) as Project[]
-          if (Array.isArray(data) && data.length > 0) {
-            setProjects(data)
-          }
-        }
-      } catch {
-        // ignore and keep sample data
-      }
-    })()
+    // Skip API calls for static export
+    // try {
+    //   const res = await fetch("/api/projects", { cache: "no-store" })
+    //   if (res.ok) {
+    //     const data = (await res.json()) as Project[]
+    //     if (Array.isArray(data) && data.length > 0) {
+    //       setProjects(data)
+    //     }
+    //   }
+    // } catch {
+    //   // ignore and keep sample data
+    // }
   }, [])
   useEffect(() => {
-    const checkAdmin = () => {
-      const has = typeof document !== "undefined" && document.cookie.includes("cc_admin=1")
-      setIsAdmin(!!has)
-    }
-    checkAdmin()
-    const interval = setInterval(checkAdmin, 1000)
-    return () => clearInterval(interval)
+    // Disable admin functionality for static export
+    setIsAdmin(false)
   }, [])
   const [showUploadForm, setShowUploadForm] = useState(false)
   const [formData, setFormData] = useState({
@@ -235,6 +229,10 @@ function ProjectsContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    // Disabled for static export - no API routes available
+    alert("Project submission disabled for static deployment")
+    return
+    
     if (!formData.title || !formData.description) return
     const payload = {
       title: formData.title,
