@@ -583,7 +583,7 @@ export default function ProjectsPage() {
                               setEditData({
                                 title: project.title,
                                 description: project.description,
-                                image: project.image,
+                                image: project.image || "",
                                 videos: (project.videos || []).join(", "),
                                 author: project.author || "",
                                 tags: (project.tags || []).join(", "),
