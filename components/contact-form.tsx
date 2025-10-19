@@ -3,8 +3,10 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+
+const FIVERR_URL =
+  "https://www.fiverr.com/codecraftedmk/develop-a-custom-chrome-firefox-or-edge-extension-for-automation-and-web-tools?context_referrer=tailored_homepage_perseus&source=recently_viewed_gigs&ref_ctx_id=1c97c055e63a4cc4b2714a43c4597509&context=recommendation&pckg_id=1&pos=4&context_alg=recently_viewed&seller_online=true&imp_id=2f25c024-a682-4c59-80ab-1cb3ba504984"
+const FREELANCER_URL = "https://www.freelancer.com/u/CodeCraftedMK"
 
 export function ContactForm() {
   const [formData, setFormData] = useState({
@@ -17,17 +19,20 @@ export function ContactForm() {
     subscribe: true,
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, type, value } = event.target
+
     if (type === "checkbox") {
-      setFormData((prev) => ({ ...prev, [name]: (e.target as HTMLInputElement).checked }))
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }))
+      const { checked } = event.target as HTMLInputElement
+      setFormData((previous) => ({ ...previous, [name]: checked }))
+      return
     }
+
+    setFormData((previous) => ({ ...previous, [name]: value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     console.log("Form submitted:", formData)
   }
 
@@ -37,56 +42,34 @@ export function ContactForm() {
         <div className="grid gap-12 lg:grid-cols-2">
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Let’s scope your next release
+              Let&apos;s scope your next release
             </h2>
             <p className="mt-6 text-lg text-muted-foreground">
               Team CodeCrafted plugs into your roadmap with senior engineers, designers, and AI specialists.
             </p>
             <ul className="mt-4 space-y-3 text-muted-foreground">
               <li className="flex gap-3">
-                <span className="text-primary font-bold">*</span>
+                <span className="font-bold text-primary">*</span>
                 <span>Ship Flutter + Firebase products with vetted patterns for auth, realtime data, and scale.</span>
               </li>
               <li className="flex gap-3">
-                <span className="text-primary font-bold">*</span>
+                <span className="font-bold text-primary">*</span>
                 <span>Design and deploy AI-powered experiences that tie back to measurable KPIs.</span>
               </li>
               <li className="flex gap-3">
-                <span className="text-primary font-bold">*</span>
+                <span className="font-bold text-primary">*</span>
                 <span>Automate operations with dashboards, workflows, and integrations your team can own.</span>
               </li>
             </ul>
-            <div className="mt-8 p-6 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg border border-primary/20">
-              <h3 className="text-lg font-semibold text-foreground mb-3">🚀 Quick Start Options</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Prefer marketplaces? Book us instantly via our verified profiles:
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <a
-                  href="https://www.fiverr.com/codecraftedmk/develop-a-custom-chrome-firefox-or-edge-extension-for-automation-and-web-tools?context_referrer=tailored_homepage_perseus&source=recently_viewed_gigs&ref_ctx_id=1c97c055e63a4cc4b2714a43c4597509&context=recommendation&pckg_id=1&pos=4&context_alg=recently_viewed&seller_online=true&imp_id=2f25c024-a682-4c59-80ab-1cb3ba504984"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium"
-                >
-                  <span>🌟 Fiverr</span>
-                  <span className="text-xs">(Recommended)</span>
-                </a>
-                <a
-                  href="https://www.freelancer.com/u/CodeCraftedMK"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
-                >
-                  <span>💼 Freelancer</span>
-                </a>
-              </div>
-            </div>
           </div>
 
-          <Card className="p-8 border-border/50">
-            <h3 className="text-xl font-bold text-foreground mb-6">Schedule a Tour</h3>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+          <div
+            data-slot="card"
+            className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border border-border/50 p-8 shadow-sm"
+          >
+            <h3 className="mb-6 text-xl font-bold text-foreground">Schedule a Tour</h3>
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <input
                   type="text"
                   name="firstName"
@@ -162,20 +145,22 @@ export function ContactForm() {
                   className="mt-1"
                 />
                 <span>
-                  Yes, I would like to receive communications about CodeCrafted updates and community events and
-                  understand that I can unsubscribe at any time.
+                  Yes, I would like to receive communications about CodeCrafted updates and community events and understand
+                  that I can unsubscribe at any time.
                 </span>
               </label>
 
-              <Button type="submit" className="w-full">
+              <button
+                data-slot="button"
+                type="submit"
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2 has-[&_svg]:px-3 w-full"
+              >
                 Get a Tour
-              </Button>
+              </button>
             </form>
-          </Card>
+          </div>
         </div>
       </div>
     </section>
   )
 }
-
-

@@ -184,63 +184,7 @@ export default function WorkWithUsPage() {
         </div>
       </section>
 
-      {/* Fiverr CTA Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-primary/10 to-primary/5">
-        <div className="mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-6">
-            Ready to Get Started?
-          </h2>
-          <p className="text-lg text-muted-foreground mb-8">
-            Choose your preferred platform to start your project with us
-          </p>
-          
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card className="p-8 hover:shadow-lg transition-shadow">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <ExternalLink className="h-8 w-8 text-green-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Fiverr Marketplace</h3>
-                <p className="text-muted-foreground mb-6">
-                  Browse our services and packages on Fiverr. Perfect for quick projects and established workflows.
-                </p>
-                <Button 
-                  className="w-full"
-                  onClick={() => window.open('https://www.fiverr.com/codecraftedmk/develop-a-custom-chrome-firefox-or-edge-extension-for-automation-and-web-tools?context_referrer=tailored_homepage_perseus&source=recently_viewed_gigs&ref_ctx_id=1c97c055e63a4cc4b2714a43c4597509&context=recommendation&pckg_id=1&pos=4&context_alg=recently_viewed&seller_online=true&imp_id=2f25c024-a682-4c59-80ab-1cb3ba504984', '_blank')}
-                >
-                  Visit Our Fiverr Profile
-                  <ExternalLink className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </Card>
-            
-            <Card className="p-8 hover:shadow-lg transition-shadow">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="h-8 w-8 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Direct Contact</h3>
-                <p className="text-muted-foreground mb-6">
-                  For custom projects and long-term partnerships, contact us directly for personalized solutions.
-                </p>
-                <Button 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={() => {
-                    document.getElementById('contact-form')?.scrollIntoView({ 
-                      behavior: 'smooth',
-                      block: 'start'
-                    });
-                  }}
-                >
-                  Contact Us Directly
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </Card>
-          </div>
-        </div>
-      </section>
+      {/* Removed marketplace CTA to match request */}
 
       {/* Contact Form */}
       <section id="contact-form" className="py-16 px-4 sm:px-6 lg:px-8">

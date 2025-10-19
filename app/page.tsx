@@ -4,7 +4,6 @@ import { Footer } from "@/components/footer"
 import { PlatformFeatures } from "@/components/platform-features"
 import { Customers } from "@/components/customers"
 import { Resources } from "@/components/resources"
-import { FiverrCTA } from "@/components/fiverr-cta"
 import { ContactForm } from "@/components/contact-form"
 
 export default function Home() {
@@ -15,7 +14,6 @@ export default function Home() {
       <PlatformFeatures />
       <Customers />
       <Resources />
-      <FiverrCTA />
       <ContactForm />
       <Footer />
     </main>
