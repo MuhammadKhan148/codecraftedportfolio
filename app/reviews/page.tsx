@@ -128,6 +128,61 @@ const sampleReviews: Review[] = [
     date: "3 months ago",
     helpful: 22,
   },
+  {
+    id: "11",
+    author: "Marcus Chen",
+    rating: 5,
+    title: "Outstanding React Dashboard",
+    content:
+      "The component architecture is excellent and the performance is top-notch. Clean, maintainable code with great TypeScript usage.",
+    projectTitle: "React Admin Dashboard",
+    date: "3 months ago",
+    helpful: 28,
+  },
+  {
+    id: "12",
+    author: "Sophie Williams",
+    rating: 5,
+    title: "Amazing E-commerce Solution",
+    content:
+      "Complete shopping cart implementation with Stripe integration. The checkout flow is seamless and the UI is beautiful.",
+    projectTitle: "E-commerce Platform",
+    date: "4 months ago",
+    helpful: 35,
+  },
+  {
+    id: "13",
+    author: "Ahmed Hassan",
+    rating: 5,
+    title: "Perfect Mobile App",
+    content:
+      "Flutter app with smooth animations and excellent UX. The offline functionality works flawlessly.",
+    projectTitle: "Flutter Mobile App",
+    date: "4 months ago",
+    helpful: 31,
+  },
+  {
+    id: "14",
+    author: "Rachel Green",
+    rating: 5,
+    title: "Incredible AI Integration",
+    content:
+      "The AI responses are intelligent and contextually aware. The real-time processing is impressive.",
+    projectTitle: "AI Chat Application",
+    date: "5 months ago",
+    helpful: 42,
+  },
+  {
+    id: "15",
+    author: "James Rodriguez",
+    rating: 5,
+    title: "Professional Task Manager",
+    content:
+      "Collaborative features work perfectly. The drag-and-drop interface is intuitive and responsive.",
+    projectTitle: "Task Management System",
+    date: "5 months ago",
+    helpful: 26,
+  },
 ]
 
 const blankReview = {
