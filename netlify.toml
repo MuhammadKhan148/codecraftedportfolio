@@ -8,3 +8,8 @@
 
 # Let the Next.js plugin handle all routing automatically
 
+[dev]
+  command = "npm run dev"
+  targetPort = 3000
+  publish = ".next"
+
