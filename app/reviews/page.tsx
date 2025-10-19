@@ -99,10 +99,6 @@ type ReviewFormState = typeof blankReview
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState<Review[]>(sampleReviews)
   const [showReviewForm, setShowReviewForm] = useState(false)
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [editData, setEditData] = useState<ReviewFormState>({ ...blankReview })
-  const [formData, setFormData] = useState<ReviewFormState>({ ...blankReview })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -129,16 +125,6 @@ export default function ReviewsPage() {
         if (Array.isArray(data) && data.length > 0) setReviews(data)
       }
     })()
-  }, [])
-
-  useEffect(() => {
-    const checkAdmin = () => {
-      const has = typeof document !== "undefined" && document.cookie.includes("cc_admin=1")
-      setIsAdmin(!!has)
-    }
-    checkAdmin()
-    const interval = setInterval(checkAdmin, 1000)
-    return () => clearInterval(interval)
   }, [])
 
   const renderStars = (rating: number) => {
@@ -303,30 +289,24 @@ export default function ReviewsPage() {
                         By {authorLabel} {"\u2022"} {review.date}
                       </p>
                     </div>
-                    {isAdmin && !isEditing && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="bg-transparent"
-                        onClick={() => {
-                          setEditingId(review.id)
-                          setEditData({
-                            author: review.author,
-                            projectTitle: review.projectTitle,
-                            title: review.title,
-                            content: review.content,
-                            rating: review.rating,
-                          })
-                        }}
-                      >
-                        Edit
-                      </Button>
-                    )}
                   </div>
 
-                  {isEditing ? (
-                    <div className="space-y-3 border-t border-border pt-4">
-                      <div className="grid gap-3 md:grid-cols-2">
+                  <p className="text-sm text-muted-foreground mb-4 italic">
+                    Project: <span className="text-foreground font-medium">{projectLabel}</span>
+                  </p>
+
+                  <p className="text-foreground mb-4">{contentLabel}</p>
+
+                  <div className="flex items-center gap-4 pt-4 border-t border-border">
+                    <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                      <MessageSquare className="h-4 w-4" />
+                      Reply
+                    </button>
+                    <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
+                      <ThumbsUp className="h-4 w-4" />
+                      Helpful ({review.helpful})
+                    </button>
+                  </div>
                         <input
                           type="text"
                           value={editData.author}

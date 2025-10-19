@@ -3,7 +3,7 @@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
-import { Upload, Star, Eye } from "lucide-react"
+import { Star, Eye } from "lucide-react"
 import { useEffect, useMemo, useState, Suspense } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
@@ -172,23 +172,6 @@ function ProjectsContent() {
   const category = searchParams.get('category')
   
   const [projects, setProjects] = useState<Project[]>(allProjects)
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [editData, setEditData] = useState<{
-    title: string
-    description: string
-    image: string
-    videos: string
-    author: string
-    tags: string
-  }>({
-    title: "",
-    description: "",
-    image: "",
-    videos: "",
-    author: "",
-    tags: "",
-  })
 
   // Filter projects based on category
   const filteredProjects = useMemo(() => {
@@ -212,59 +195,9 @@ function ProjectsContent() {
       }
     })()
   }, [])
-  useEffect(() => {
-    const checkAdmin = () => {
-      const has = typeof document !== "undefined" && document.cookie.includes("cc_admin=1")
-      setIsAdmin(!!has)
-    }
-    checkAdmin()
-    const interval = setInterval(checkAdmin, 1000)
-    return () => clearInterval(interval)
-  }, [])
-  const [showUploadForm, setShowUploadForm] = useState(false)
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    author: "",
-    image: "",
-    videos: "",
-    tags: "",
-  })
   const pageSize = 12
   const [currentPage, setCurrentPage] = useState(1)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!formData.title || !formData.description) return
-    const payload = {
-      title: formData.title,
-      description: formData.description,
-      author: formData.author,
-      image: formData.image || "/window.svg",
-      videos: formData.videos
-        ? formData.videos.split(",").map((v) => v.trim()).filter(Boolean)
-        : [],
-      tags: formData.tags
-        ? formData.tags.split(",").map((tag) => tag.trim()).filter(Boolean)
-        : [],
-      rating: 5,
-      views: 0,
-    }
-    try {
-      const res = await fetch("/api/projects", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-      if (res.ok) {
-        const created = (await res.json()) as Project
-        setProjects((prev) => [created, ...prev])
-        setFormData({ title: "", description: "", author: "", image: "", videos: "", tags: "" })
-        setShowUploadForm(false)
-        setCurrentPage(1)
-      }
-    } catch {}
-  }
   const totalPages = Math.max(1, Math.ceil(filteredProjects.length / pageSize))
 
   useEffect(() => {
@@ -297,12 +230,6 @@ function ProjectsContent() {
                 }
               </p>
             </div>
-            {isAdmin && (
-              <Button size="lg" onClick={() => setShowUploadForm(!showUploadForm)} className="gap-2 w-full sm:w-auto">
-                <Upload className="h-5 w-5" />
-                Add Case Study
-              </Button>
-            )}
           </div>
 
           <div className="mt-10 flex justify-center items-center gap-2">
@@ -334,107 +261,6 @@ function ProjectsContent() {
         </div>
       </section>
 
-      {/* Upload Form */}
-      {isAdmin && showUploadForm && (
-        <section className="py-12 bg-background border-b border-border">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mx-auto bg-card/50 rounded-lg border border-border p-8">
-              <h2 className="text-2xl font-bold text-foreground mb-6">Upload Your Project</h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Project Title</label>
-                  <input
-                    type="text"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="Enter project title"
-                    className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Description</label>
-                  <textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Describe your project, technologies used, and key features"
-                    rows={4}
-                    className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Your Name</label>
-                  <input
-                    type="text"
-                    value={formData.author}
-                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                    placeholder="Enter your name"
-                    className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Image URL</label>
-                  <input
-                    type="text"
-                    value={formData.image}
-                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                    placeholder="https://.../image.png"
-                    className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Video URLs (comma-separated)</label>
-                  <input
-                    type="text"
-                    value={formData.videos}
-                    onChange={(e) => setFormData({ ...formData, videos: e.target.value })}
-                    placeholder="https://.../a.mp4, https://.../b.mp4"
-                    className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Tags (comma-separated)</label>
-                  <input
-                    type="text"
-                    value={formData.tags}
-                    onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                    placeholder="ai, flutter, firebase"
-                    className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">Upload Images/Videos</label>
-                  <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer">
-                    <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground">
-                      Drag and drop your images or videos here, or click to select
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-4">
-                  <Button type="submit" className="flex-1">
-                    Publish Project
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="flex-1 bg-transparent"
-                    onClick={() => setShowUploadForm(false)}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* Projects Grid */}
       <section className="py-16 sm:py-24">
@@ -498,104 +324,6 @@ function ProjectsContent() {
                   </div>
                   </div>
                 </Link>
-
-                {isAdmin && (
-                  <div className="mt-2 p-4 border border-border rounded-lg">
-                    {editingId === project.id ? (
-                      <div className="space-y-2">
-                        <input
-                          type="text"
-                          value={editData.title}
-                          onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                          placeholder="Title"
-                          className="w-full px-3 py-2 rounded border border-border bg-background text-foreground"
-                        />
-                        <textarea
-                          value={editData.description}
-                          onChange={(e) => setEditData({ ...editData, description: e.target.value })}
-                          placeholder="Description"
-                          rows={3}
-                          className="w-full px-3 py-2 rounded border border-border bg-background text-foreground"
-                        />
-                        <input
-                          type="text"
-                          value={editData.image}
-                          onChange={(e) => setEditData({ ...editData, image: e.target.value })}
-                          placeholder="Image URL"
-                          className="w-full px-3 py-2 rounded border border-border bg-background text-foreground"
-                        />
-                        <input
-                          type="text"
-                          value={editData.videos}
-                          onChange={(e) => setEditData({ ...editData, videos: e.target.value })}
-                          placeholder="Video URLs (comma-separated)"
-                          className="w-full px-3 py-2 rounded border border-border bg-background text-foreground"
-                        />
-                        <input
-                          type="text"
-                          value={editData.tags}
-                          onChange={(e) => setEditData({ ...editData, tags: e.target.value })}
-                          placeholder="Tags (comma-separated)"
-                          className="w-full px-3 py-2 rounded border border-border bg-background text-foreground"
-                        />
-                        <div className="flex gap-2">
-                          <Button
-                            onClick={async () => {
-                              const payload = {
-                                id: project.id,
-                                title: editData.title,
-                                description: editData.description,
-                                image: editData.image,
-                                videos: editData.videos
-                                  ? editData.videos.split(",").map((v) => v.trim()).filter(Boolean)
-                                  : [],
-                                author: project.author,
-                                tags: editData.tags
-                                  ? editData.tags.split(",").map((tag) => tag.trim()).filter(Boolean)
-                                  : [],
-                              }
-                              const res = await fetch("/api/projects", {
-                                method: "PATCH",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify(payload),
-                              })
-                              if (res.ok) {
-                                const updated = (await res.json()) as Project
-                                setProjects((prev) => prev.map((p) => (p.id === updated.id ? updated : p)))
-                                setEditingId(null)
-                              }
-                            }}
-                          >
-                            Save
-                          </Button>
-                          <Button variant="outline" className="bg-transparent" onClick={() => setEditingId(null)}>
-                            Cancel
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          className="bg-transparent"
-                            onClick={() => {
-                              setEditingId(project.id)
-                              setEditData({
-                                title: project.title,
-                                description: project.description,
-                                image: project.image || "",
-                                videos: (project.videos || []).join(", "),
-                                author: project.author || "",
-                                tags: (project.tags || []).join(", "),
-                              })
-                            }}
-                        >
-                          Edit
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
               </div>
             ))}
           </div>

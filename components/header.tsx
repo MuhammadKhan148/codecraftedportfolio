@@ -1,7 +1,6 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { useEffect } from "react"
 import { Menu, X } from "lucide-react"
 import { useState } from "react"
 import { usePathname } from "next/navigation"
@@ -10,20 +9,6 @@ import Link from "next/link"
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
-  const [isAdmin, setIsAdmin] = useState(false)
-  const isProd = process.env.NEXT_PUBLIC_DEPLOY_TARGET === "netlify"
-
-  useEffect(() => {
-    // Check admin cookie on mount and periodically
-    const checkAdmin = () => {
-      const cookie = typeof document !== "undefined" ? document.cookie.includes("cc_admin=1") : false
-      console.log("Admin check:", cookie, "Cookie string:", document.cookie)
-      setIsAdmin(cookie)
-    }
-    checkAdmin()
-    const interval = setInterval(checkAdmin, 1000)
-    return () => clearInterval(interval)
-  }, [])
 
   const isActive = (path: string) => pathname === path
 
@@ -87,48 +72,9 @@ export function Header() {
             >
               About
             </Link>
-            {/* Admin link removed; use Login/Logout instead */}
           </nav>
 
           <div className="flex items-center gap-4">
-            {!isProd && !isAdmin ? (
-              <Button
-                variant="outline"
-                className="hidden sm:inline-flex bg-transparent"
-                onClick={async () => {
-                  const password = prompt("Enter admin password") || ""
-                  if (!password) return
-                  console.log("Attempting login with password:", password)
-                  const res = await fetch("/api/auth/login", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ password }),
-                  })
-                  const data = await res.json()
-                  console.log("Login response:", data)
-                  if (data.ok) {
-                    alert("Admin login successful")
-                    console.log("Reloading page...")
-                    location.reload()
-                  } else {
-                    alert("Login failed - wrong password")
-                  }
-                }}
-              >
-                Admin Login
-              </Button>
-            ) : (!isProd && (
-              <Button
-                variant="outline"
-                className="hidden sm:inline-flex bg-transparent"
-                onClick={async () => {
-                  await fetch("/api/auth/logout", { method: "POST" })
-                  location.reload()
-                }}
-              >
-                Logout
-              </Button>
-            ))}
             <Link href="/projects">
               <Button className="hidden sm:inline-flex">Get Started</Button>
             </Link>
@@ -164,7 +110,6 @@ export function Header() {
             <Link href="/company" className="block px-4 py-2 text-sm text-muted-foreground hover:text-foreground">
               About
             </Link>
-            {/* Admin page link intentionally hidden to keep inline admin flow */}
           </nav>
         )}
       </div>
