@@ -8,12 +8,12 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/next"
+  to = "/.netlify/functions/___netlify-server-handler"
   status = 200
   force = true
 
 [[redirects]]
   from = "/*"
-  to = "/.netlify/functions/next"
+  to = "/.netlify/functions/___netlify-server-handler"
   status = 200
 
