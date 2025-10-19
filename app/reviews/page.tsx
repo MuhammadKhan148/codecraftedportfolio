@@ -84,6 +84,50 @@ const sampleReviews: Review[] = [
     date: "1 month ago",
     helpful: 15,
   },
+  {
+    id: "7",
+    author: "Noah Patel",
+    rating: 5,
+    title: "Lightning-fast MERN API",
+    content:
+      "Endpoints are well-documented and the response times are excellent. Solid architecture and testing.",
+    projectTitle: "MERN Backend",
+    date: "1 month ago",
+    helpful: 11,
+  },
+  {
+    id: "8",
+    author: "Hannah Lee",
+    rating: 5,
+    title: "Sleek Flutter UI",
+    content:
+      "Animations feel native and buttery smooth. The widget composition is clean and reusable.",
+    projectTitle: "Flutter Mobile App",
+    date: "2 months ago",
+    helpful: 19,
+  },
+  {
+    id: "9",
+    author: "Omar Farooq",
+    rating: 4,
+    title: "Robust AI Agent",
+    content:
+      "The agent handles complex prompts remarkably well. Fine-tuning prompts could take it to the next level.",
+    projectTitle: "AI Chat Agent",
+    date: "2 months ago",
+    helpful: 14,
+  },
+  {
+    id: "10",
+    author: "Julia Mendes",
+    rating: 5,
+    title: "Production-ready Next.js Site",
+    content:
+      "Great DX and clean code. ISR and image optimization are used correctly. Smooth deployment experience.",
+    projectTitle: "Next.js Marketing Site",
+    date: "3 months ago",
+    helpful: 22,
+  },
 ]
 
 const blankReview = {
@@ -99,6 +143,7 @@ type ReviewFormState = typeof blankReview
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState<Review[]>(sampleReviews)
   const [showReviewForm, setShowReviewForm] = useState(false)
+  const [formData, setFormData] = useState<ReviewFormState>({ ...blankReview })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -140,10 +185,7 @@ export default function ReviewsPage() {
     )
   }
 
-  const resetEditState = () => {
-    setEditingId(null)
-    setEditData({ ...blankReview })
-  }
+  // removed admin edit state and helpers
 
   return (
     <main className="min-h-screen bg-background">
@@ -261,15 +303,10 @@ export default function ReviewsPage() {
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="space-y-6">
             {reviews.map((review) => {
-              const isEditing = editingId === review.id
-              const ratingForDisplay = isEditing ? editData.rating : review.rating
+              const ratingForDisplay = review.rating
               const ratingLabel = Number.isInteger(ratingForDisplay)
                 ? `${ratingForDisplay}.0`
                 : ratingForDisplay.toFixed(1)
-              const authorLabel = isEditing ? editData.author : review.author
-              const titleLabel = isEditing ? editData.title : review.title
-              const projectLabel = isEditing ? editData.projectTitle : review.projectTitle
-              const contentLabel = isEditing ? editData.content : review.content
 
               return (
                 <div
@@ -282,20 +319,18 @@ export default function ReviewsPage() {
                         {renderStars(ratingForDisplay)}
                         <span className="text-sm font-medium text-foreground">{ratingLabel}</span>
                       </div>
-                      {!isEditing && (
-                        <h3 className="text-lg font-semibold text-foreground">{titleLabel}</h3>
-                      )}
+                      <h3 className="text-lg font-semibold text-foreground">{review.title}</h3>
                       <p className="text-sm text-muted-foreground mt-1">
-                        By {authorLabel} {"\u2022"} {review.date}
+                        By {review.author} {"\u2022"} {review.date}
                       </p>
                     </div>
                   </div>
 
                   <p className="text-sm text-muted-foreground mb-4 italic">
-                    Project: <span className="text-foreground font-medium">{projectLabel}</span>
+                    Project: <span className="text-foreground font-medium">{review.projectTitle}</span>
                   </p>
 
-                  <p className="text-foreground mb-4">{contentLabel}</p>
+                  <p className="text-foreground mb-4">{review.content}</p>
 
                   <div className="flex items-center gap-4 pt-4 border-t border-border">
                     <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
@@ -306,110 +341,6 @@ export default function ReviewsPage() {
                       <ThumbsUp className="h-4 w-4" />
                       Helpful ({review.helpful})
                     </button>
-                  </div>
-                        <input
-                          type="text"
-                          value={editData.author}
-                          onChange={(e) => setEditData({ ...editData, author: e.target.value })}
-                          placeholder="Author"
-                          className="w-full px-3 py-2 rounded border border-border bg-background text-foreground"
-                        />
-                        <input
-                          type="text"
-                          value={editData.projectTitle}
-                          onChange={(e) => setEditData({ ...editData, projectTitle: e.target.value })}
-                          placeholder="Project"
-                          className="w-full px-3 py-2 rounded border border-border bg-background text-foreground"
-                        />
-                      </div>
-                      <input
-                        type="text"
-                        value={editData.title}
-                        onChange={(e) => setEditData({ ...editData, title: e.target.value })}
-                        placeholder="Title"
-                        className="w-full px-3 py-2 rounded border border-border bg-background text-foreground"
-                      />
-                      <textarea
-                        value={editData.content}
-                        onChange={(e) => setEditData({ ...editData, content: e.target.value })}
-                        placeholder="Content"
-                        rows={3}
-                        className="w-full px-3 py-2 rounded border border-border bg-background text-foreground"
-                      />
-                      <div className="flex gap-2 items-center">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <button
-                            key={star}
-                            type="button"
-                            onClick={() => setEditData({ ...editData, rating: star })}
-                            className="focus:outline-none"
-                          >
-                            <Star
-                              className={`h-5 w-5 ${
-                                star <= editData.rating ? "fill-primary text-primary" : "text-muted-foreground"
-                              }`}
-                            />
-                          </button>
-                        ))}
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          onClick={async () => {
-                            const payload = {
-                              id: review.id,
-                              author: editData.author,
-                              projectTitle: editData.projectTitle,
-                              title: editData.title,
-                              content: editData.content,
-                              rating: editData.rating,
-                            }
-                            try {
-                              const res = await fetch("/api/reviews", {
-                                method: "PATCH",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify(payload),
-                              })
-                              if (res.ok) {
-                                const updated = (await res.json()) as Review
-                                setReviews((prev) => prev.map((r) => (r.id === updated.id ? updated : r)))
-                                resetEditState()
-                              }
-                            } catch {
-                              // ignore failures for now
-                            }
-                          }}
-                        >
-                          Save
-                        </Button>
-                        <Button
-                          variant="outline"
-                          className="bg-transparent"
-                          onClick={resetEditState}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <p className="text-sm text-muted-foreground mb-4 italic">
-                        Project: <span className="text-foreground font-medium">{projectLabel}</span>
-                      </p>
-
-                      <p className="text-foreground mb-4">{contentLabel}</p>
-                    </>
-                  )}
-
-                  <div className="flex items-center gap-4 pt-4 border-t border-border">
-                    <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                      <MessageSquare className="h-4 w-4" />
-                      Reply
-                    </button>
-                    <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-                      <ThumbsUp className="h-4 w-4" />
-                      Helpful ({review.helpful})
-                    </button>
-                    {isEditing && <span className="text-xs text-muted-foreground">Editing</span>}
                   </div>
                 </div>
               )
